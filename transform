@@ -1,0 +1,17 @@
+Rotate z-axis so x-axis lies on vector projection on xy-plane:
+
+c -s 0
+s  c 0
+0  0 1
+
+Rotate y-axis so z-axis lies along vector:
+
+ c 0 s
+ 0 1 0
+-s 0 c
+
+Vector:
+
+x: r*sin(theta)*cos(phi)
+y: r*sin(theta)*sin(phi)
+z: r*cos(theta)
