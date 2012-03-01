@@ -16,7 +16,7 @@ Plot* Plot::CreateInstance()
 Plot::Plot()
 {
 
-	gnuplot = popen("gnuplot -persist > /dev/null 2>&1","w");
+	gnuplot = popen("gnuplot - > /dev/null 2>&1","w");
 	//write("set term postscript eps color");
 	//write("set xlabel \"x\"");
 	write("set xrange[-3:3]");
@@ -43,6 +43,7 @@ Plot::~Plot()
 {
 
 	write("set terminal x11 close 0");
+	write("exit");
 	pclose(gnuplot);
 
 }
