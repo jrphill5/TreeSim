@@ -242,13 +242,17 @@ int total_tree_mass()
 void screenshot()
 {
 
-	//plot->write("set term postscript eps color");
-	plot->write("set term png color small");
-	char savefile[128]; sprintf(savefile, "./screenshots/tree-%Lu.png", (unsigned long long)time( NULL ));
+	//plot->write("set term postscript eps enhanced color");
+	plot->write("set terminal svg enhanced size 800 800");
+	plot->write("set object 1 rect from screen 0, 0, 0 to screen 1, 1, 0 behind");
+	plot->write("set object 1 rect fc  rgb \"white\" fillstyle solid 1.0");
+	//plot->write("set term png enhanced color");
+	char savefile[128]; sprintf(savefile, "./screenshots/tree-%Lu.svg", (unsigned long long)time( NULL ));
 	char command[128];  sprintf(command,  "set out \"%s\"",					savefile);
 	char status[128];   sprintf(status,   "Screenshot saved to \"%s\".",	savefile);
-	plot->write( command ); write( status );
+	plot->write( command );
 	plot->refresh();
+	write( status );
 	plot->write( "set term x11" );
 
 }
