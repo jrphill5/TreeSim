@@ -25,7 +25,7 @@ Plot::Plot()
 	//write("set zlabel \"z\"");
 	write("set zrange[0:6]");
 	write("set view 90,0,1,1");
-	write("set size ratio 1");
+	write("set view equal_axes xyz");
 	write("unset key");
 	write("set border 15");
 	write("set ticslevel 0");
@@ -34,8 +34,6 @@ Plot::Plot()
 	write("unset ztics");
 	write("f(x,y) = 0");
 	write("splot f(x,y)");
-
-	this->refresh();
 
 }
 
