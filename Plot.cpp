@@ -27,7 +27,8 @@ Plot::Plot()
 	write("set view 90,0,1,1");
 	write("set size ratio 1");
 	write("unset key");
-	write("unset border");
+	write("set border 15");
+	write("set ticslevel 0");
 	write("unset xtics");
 	write("unset ytics");
 	write("unset ztics");
