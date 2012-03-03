@@ -45,9 +45,9 @@ int main()
 	plot("replot");
 
 	double r = 1.0;
-	double a = 0;
-	double b = 0;
-	double c = 0;
+	double a0 = 0;
+	double b0 = pi/6.0;
+	double c0 = 0;
 
 	double xhat[3] = { 1.0, 0.0, 0.0 };
 	double yhat[3] = { 0.0, 1.0, 0.0 };
@@ -56,34 +56,44 @@ int main()
 	double* vector;
 	vector = (double*) calloc(3, sizeof(double));
 
-	double rotA[]   = {  cos(a), -sin(a),  0.0,
+/*	double rotA[]   = {  cos(a), -sin(a),  0.0,
 	                     sin(a),  cos(a),  0.0,
-	                     0.0,     0.0,     1.0     };
+	                     0.0,     0.0,     1.0     };*/
 
-	double rotB[]   = {  cos(b),  0.0,     sin(b),
+/*	double rotB[]   = {  cos(b),  0.0,     sin(b),
 	                     0.0,     1.0,     0.0,
-	                    -sin(b),  0.0,     cos(b)  };
+	                    -sin(b),  0.0,     cos(b)  };*/
 
-	double rotC[]   = {  cos(c), -sin(c),  0.0,
+/*	double rotC[]   = {  cos(c), -sin(c),  0.0,
 	                     sin(c),  cos(c),  0.0,
-	                     0.0,     0.0,     1.0     };
+	                     0.0,     0.0,     1.0     };*/
 
-	double rotAB[]  = {  cos(a)*cos(b), -sin(a),  cos(a)*sin(b),
+/*	double rotAB[]  = {  cos(a)*cos(b), -sin(a),  cos(a)*sin(b),
 	                     sin(a)*cos(b),  cos(a),  sin(a)*sin(b),
-	                    -sin(b),         0.0,     cos(b)  };
+	                    -sin(b),         0.0,     cos(b)  };*/
 
-	double rotABC[] = {  cos(a)*cos(b)*cos(c) - sin(a)*sin(c), -sin(a)*cos(c) - cos(a)*cos(b)*sin(c),  cos(a)*sin(b),
+/*	double rotABC[] = {  cos(a)*cos(b)*cos(c) - sin(a)*sin(c), -sin(a)*cos(c) - cos(a)*cos(b)*sin(c),  cos(a)*sin(b),
 	                     sin(a)*cos(b)*cos(c) + cos(a)*sin(c),  cos(a)*cos(c) - sin(a)*cos(b)*sin(c),  sin(a)*sin(b),
-	                    -sin(b)*cos(c),                         sin(b)*sin(c)                       ,  cos(b)         };
+	                    -sin(b)*cos(c),                         sin(b)*sin(c)                       ,  cos(b)         };*/
 
-	int kmax = 50;
+	int speed = 0;
+
+	while ( speed < 1 || speed > 100 )
+	{
+
+		printf("speed: ");
+		scanf("%d",&speed);
+
+	}
+
+	int kmax = 101-speed;
 	int jmax = 1;
-	int imax = 50;
+	int imax = 101-speed;
 	while ( true )
 	for ( int k = 0; k < kmax; k++ )
 	{
 
-		a = 2.0*pi/kmax * k;
+		double a = a0 + 2.0*pi/kmax * k;
 
 		double rotA[]   = {  cos(a), -sin(a),  0.0,
 		                     sin(a),  cos(a),  0.0,
@@ -101,7 +111,7 @@ int main()
 		for ( int j = 0; j < jmax; j++ )
 		{
 
-			b = pi / 6.0;
+			double b = b0 + 2.0*pi/jmax * j;
 
 			double rotAB[]  = {  cos(a)*cos(b), -sin(a),  cos(a)*sin(b),
 			                     sin(a)*cos(b),  cos(a),  sin(a)*sin(b),
@@ -120,7 +130,7 @@ int main()
 			for ( int i = 0; i < imax; i++ )
 			{
 
-				c = 2.0*pi/imax * i;
+				double c = c0 + 2.0*pi/imax * i;
 
 				double rotABC[] = {  cos(a)*cos(b)*cos(c) - sin(a)*sin(c), -sin(a)*cos(c) - cos(a)*cos(b)*sin(c),  cos(a)*sin(b),
 				                     sin(a)*cos(b)*cos(c) + cos(a)*sin(c),  cos(a)*cos(c) - sin(a)*cos(b)*sin(c),  sin(a)*sin(b),
@@ -142,17 +152,6 @@ int main()
 		}
 
 	}
-
-	vector = transform( rotABC, xhat );
-	drawv( 31, "#0000FF", vector );
-
-	vector = transform( rotABC, yhat );
-	drawv( 32, "#0000FF", vector );
-
-	vector = transform( rotABC, zhat );
-	drawv( 33, "#0000FF", vector );
-
-	plot("replot");
 
 	while (true)
 	{
