@@ -58,76 +58,101 @@ int main()
 
 	double rotA[]   = {  cos(a), -sin(a),  0.0,
 	                     sin(a),  cos(a),  0.0,
-                         0.0,     0.0,     1.0     };
-
-	double rotB[]   = {  cos(b),  0.0,    -sin(b),
-	                     0.0,     1.0,     0.0,
-	                     sin(b),  0.0,     cos(b)  };
-
-	double rotC[]   = {  cos(c),  sin(c),  0.0,
-	                    -sin(c),  cos(c),  0.0,
 	                     0.0,     0.0,     1.0     };
 
-	double rotAB[]  = {  cos(a)*cos(b), -sin(a),        -cos(a)*sin(b),
-	                     sin(a)*cos(b),  cos(a),        -sin(a)*sin(b),
-	                     sin(b),         0.0,            cos(b)  };
+	double rotB[]   = {  cos(b),  0.0,     sin(b),
+	                     0.0,     1.0,     0.0,
+	                    -sin(b),  0.0,     cos(b)  };
 
-	double rotCBA[] = {  cos(a)*cos(c) - sin(a)*cos(b)*sin(c),  cos(a)*cos(b)*sin(c) + sin(a)*cos(c),  sin(b)*sin(c),
-	                    -sin(a)*cos(b)*cos(c) - cos(a)*sin(c),  cos(a)*cos(b)*cos(c) - sin(a)*sin(c),  sin(b)*cos(c),
-	                     sin(a)*sin(b),                        -cos(a)*sin(b),                         cos(b)         };
+	double rotC[]   = {  cos(c), -sin(c),  0.0,
+	                     sin(c),  cos(c),  0.0,
+	                     0.0,     0.0,     1.0     };
 
+	double rotAB[]  = {  cos(a)*cos(b), -sin(a),  cos(a)*sin(b),
+	                     sin(a)*cos(b),  cos(a),  sin(a)*sin(b),
+	                    -sin(b),         0.0,     cos(b)  };
+
+	double rotABC[] = {  cos(a)*cos(b)*cos(c) - sin(a)*sin(c), -sin(a)*cos(c) - cos(a)*cos(b)*sin(c),  cos(a)*sin(b),
+	                     sin(a)*cos(b)*cos(c) + cos(a)*sin(c),  cos(a)*cos(c) - sin(a)*cos(b)*sin(c),  sin(a)*sin(b),
+	                    -sin(b)*cos(c),                         sin(b)*sin(c)                       ,  cos(b)         };
+
+	int speed = 50;
 	while ( true )
-	for ( int j = 0; j < 100; j++ )
+	for ( int k = 0; k < speed; k++ )
 	{
 
-		a = 2.0*pi/100.0 * j;
+		a = 2.0*pi/speed * k;
+		a = pi/6.0;
 
 		double rotA[]   = {  cos(a), -sin(a),  0.0,
-							 sin(a),  cos(a),  0.0,
-							 0.0,     0.0,     1.0     };	
+		                     sin(a),  cos(a),  0.0,
+		                     0.0,     0.0,     1.0     };	
 
-		vector = transform( rotA, xhat ); printv( vector );
+		vector = transform( rotA, xhat );
 		drawv( 11, "#FF0000", vector );
 
-		vector = transform( rotA, yhat ); printv( vector );
+		vector = transform( rotA, yhat );
 		drawv( 12, "#FF0000", vector );
 
-		vector = transform( rotA, zhat ); printv( vector );
+		vector = transform( rotA, zhat );
 		drawv( 13, "#FF0000", vector );
 
 		plot("replot");
 
-		for ( int i = 0; i < 100; i++ )
+		for ( int j = 0; j < speed; j++ )
 		{
 
-			b = 2.0*pi/100.0 * i;
+			b = 2.0*pi/speed * j;
 
-			double rotAB[]  = {  cos(a)*cos(b), -sin(a),        -cos(a)*sin(b),
-								 sin(a)*cos(b),  cos(a),        -sin(a)*sin(b),
-								 sin(b),         0.0,            cos(b)  };
+			double rotAB[]  = {  cos(a)*cos(b), -sin(a),  cos(a)*sin(b),
+			                     sin(a)*cos(b),  cos(a),  sin(a)*sin(b),
+			                    -sin(b),         0.0,     cos(b)  };
 
-			vector = transform( rotAB, xhat ); printv( vector );
+
+			vector = transform( rotAB, xhat );
 			drawv( 21, "#00FF00", vector );
 
-			vector = transform( rotAB, yhat ); printv( vector );
+			vector = transform( rotAB, yhat );
 			drawv( 22, "#00FF00", vector );
 
-			vector = transform( rotAB, zhat ); printv( vector );
+			vector = transform( rotAB, zhat );
 			drawv( 23, "#00FF00", vector );
 
 			plot("replot");
+
+			for ( int i = 0; i < speed; i++ )
+			{
+
+				c = 2.0*pi/speed * i;
+
+				double rotABC[] = {  cos(a)*cos(b)*cos(c) - sin(a)*sin(c), -sin(a)*cos(c) - cos(a)*cos(b)*sin(c),  cos(a)*sin(b),
+				                     sin(a)*cos(b)*cos(c) + cos(a)*sin(c),  cos(a)*cos(c) - sin(a)*cos(b)*sin(c),  sin(a)*sin(b),
+				                    -sin(b)*cos(c),                         sin(b)*sin(c)                       ,  cos(b)         };
+
+				vector = transform( rotABC, xhat );
+				drawv( 31, "#0000FF", vector );
+
+				vector = transform( rotABC, yhat );
+				drawv( 32, "#0000FF", vector );
+
+				vector = transform( rotABC, zhat );
+				drawv( 33, "#0000FF", vector );
+
+				plot("replot");
+
+			}
 
 		}
 
 	}
 
-	vector = transform( rotCBA, xhat ); printv( vector );
+	vector = transform( rotABC, xhat );
 	drawv( 31, "#0000FF", vector );
 
-	vector = transform( rotCBA, yhat ); printv( vector );
+	vector = transform( rotABC, yhat );
 	drawv( 32, "#0000FF", vector );
 
-	vector = transform( rotCBA, zhat ); printv( vector );
+	vector = transform( rotABC, zhat );
 	drawv( 33, "#0000FF", vector );
 
 	plot("replot");
