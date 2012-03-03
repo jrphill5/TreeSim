@@ -9,9 +9,11 @@ void plot( const char* command);
 void printv( double* v );
 void printm( double* m );
 double dot( double* v1, double* v2 );
+double* unitv( double* v );
 double length( double* v );
 double* transform( double* m, double* v );
 double* transpose( double* m );
+void drawv( int id, const char* color, double* v );
 
 const double pi = 3.141592653589793;
 
@@ -23,14 +25,14 @@ int main()
 
 	gnuplot = popen("gnuplot - > /dev/null 2>&1","w");
 	//plot("set term postscript eps color");
-	plot("set xlabel \"y\"");
+	plot("set xlabel \"x\" offset first 0,3,0");
 	plot("set xrange[-3:3]");
-	plot("set ylabel \"x\"");
+	plot("set ylabel \"y\" offset first 3,0,0");
 	plot("set yrange[-3:3]");
-	plot("set zlabel \"z\"");
+	plot("set zlabel \"z\" offset first 0,0,1.5");
 	plot("set zrange[0:3]");
 	plot("set view equal_axes xyz");
-	plot("set view 60,30");
+	plot("set view 60,135");
 	plot("unset key");
 	plot("unset border");
 	plot("set ticslevel 0");
@@ -43,9 +45,9 @@ int main()
 	plot("replot");
 
 	double r = 1.0;
-	double a = pi / 6.0;
-	double b = pi / 6.0;
-	double c = pi / 6.0;
+	double a = 0;
+	double b = 0;
+	double c = 0;
 
 	double xhat[3] = { 1.0, 0.0, 0.0 };
 	double yhat[3] = { 0.0, 1.0, 0.0 };
@@ -54,63 +56,79 @@ int main()
 	double* vector;
 	vector = (double*) calloc(3, sizeof(double));
 
-	char command[128];
-
 	double rotA[]   = {  cos(a), -sin(a),  0.0,
 	                     sin(a),  cos(a),  0.0,
                          0.0,     0.0,     1.0     };
 
-	double rotB[]   = {  1.0,     0.0,     0.0,
-	                     0.0,     cos(b),  sin(b),
-	                     0.0,    -sin(b),  cos(b)  };
+	double rotB[]   = {  cos(b),  0.0,    -sin(b),
+	                     0.0,     1.0,     0.0,
+	                     sin(b),  0.0,     cos(b)  };
 
 	double rotC[]   = {  cos(c),  sin(c),  0.0,
 	                    -sin(c),  cos(c),  0.0,
 	                     0.0,     0.0,     1.0     };
 
-	double rotBA[]  = {  cos(a),        -sin(a),         0.0,
-	                     sin(a)*cos(b),  cos(a)*cos(b),  sin(b),
-	                    -sin(a)*sin(b), -cos(a)*sin(b),  cos(b)  };
+	double rotAB[]  = {  cos(a)*cos(b), -sin(a),        -cos(a)*sin(b),
+	                     sin(a)*cos(b),  cos(a),        -sin(a)*sin(b),
+	                     sin(b),         0.0,            cos(b)  };
 
-	double rotCBA[] = {  cos(a)*cos(c) + sin(a)*cos(b)*sin(c),  cos(a)*cos(b)*sin(c) - sin(a)*cos(c),  sin(b)*sin(c),
-	                     sin(a)*cos(b)*cos(c) - cos(a)*sin(c),  cos(a)*cos(b)*cos(c) + sin(a)*sin(c),  sin(b)*cos(c),
-	                    -sin(a)*sin(b),                        -cos(a)*sin(b),                         cos(b)         };
+	double rotCBA[] = {  cos(a)*cos(c) - sin(a)*cos(b)*sin(c),  cos(a)*cos(b)*sin(c) + sin(a)*cos(c),  sin(b)*sin(c),
+	                    -sin(a)*cos(b)*cos(c) - cos(a)*sin(c),  cos(a)*cos(b)*cos(c) - sin(a)*sin(c),  sin(b)*cos(c),
+	                     sin(a)*sin(b),                        -cos(a)*sin(b),                         cos(b)         };
 
-	// unit vector
-/*	vector[0] /= length;
-	vector[1] /= length;
-	vector[2] /= length;*/
+	while ( true )
+	for ( int j = 0; j < 100; j++ )
+	{
 
-	vector = transform( rotA, xhat ); printv( vector );
-	sprintf(command,"set arrow from 0,0,0 to %f,%f,%f lc rgb \"#FF0000\"", vector[0],vector[1],vector[2]); plot(command);
+		a = 2.0*pi/100.0 * j;
 
-	vector = transform( rotA, yhat ); printv( vector );
-	sprintf(command,"set arrow from 0,0,0 to %f,%f,%f lc rgb \"#FF0000\"", vector[0],vector[1],vector[2]); plot(command);
+		double rotA[]   = {  cos(a), -sin(a),  0.0,
+							 sin(a),  cos(a),  0.0,
+							 0.0,     0.0,     1.0     };	
 
-	vector = transform( rotA, zhat ); printv( vector );
-	sprintf(command,"set arrow from 0,0,0 to %f,%f,%f lc rgb \"#FF0000\"", vector[0],vector[1],vector[2]); plot(command);
+		vector = transform( rotA, xhat ); printv( vector );
+		drawv( 11, "#FF0000", vector );
 
-	plot("replot");
+		vector = transform( rotA, yhat ); printv( vector );
+		drawv( 12, "#FF0000", vector );
 
-	vector = transform( rotBA, xhat ); printv( vector );
-	sprintf(command,"set arrow from 0,0,0 to %f,%f,%f lc rgb \"#00FF00\"", vector[0],vector[1],vector[2]); plot(command);
+		vector = transform( rotA, zhat ); printv( vector );
+		drawv( 13, "#FF0000", vector );
 
-	vector = transform( rotBA, yhat ); printv( vector );
-	sprintf(command,"set arrow from 0,0,0 to %f,%f,%f lc rgb \"#00FF00\"", vector[0],vector[1],vector[2]); plot(command);
+		plot("replot");
 
-	vector = transform( rotBA, zhat ); printv( vector );
-	sprintf(command,"set arrow from 0,0,0 to %f,%f,%f lc rgb \"#00FF00\"", vector[0],vector[1],vector[2]); plot(command);
+		for ( int i = 0; i < 100; i++ )
+		{
 
-	plot("replot");
+			b = 2.0*pi/100.0 * i;
+
+			double rotAB[]  = {  cos(a)*cos(b), -sin(a),        -cos(a)*sin(b),
+								 sin(a)*cos(b),  cos(a),        -sin(a)*sin(b),
+								 sin(b),         0.0,            cos(b)  };
+
+			vector = transform( rotAB, xhat ); printv( vector );
+			drawv( 21, "#00FF00", vector );
+
+			vector = transform( rotAB, yhat ); printv( vector );
+			drawv( 22, "#00FF00", vector );
+
+			vector = transform( rotAB, zhat ); printv( vector );
+			drawv( 23, "#00FF00", vector );
+
+			plot("replot");
+
+		}
+
+	}
 
 	vector = transform( rotCBA, xhat ); printv( vector );
-	sprintf(command,"set arrow from 0,0,0 to %f,%f,%f lc rgb \"#0000FF\"", vector[0],vector[1],vector[2]); plot(command);
+	drawv( 31, "#0000FF", vector );
 
 	vector = transform( rotCBA, yhat ); printv( vector );
-	sprintf(command,"set arrow from 0,0,0 to %f,%f,%f lc rgb \"#0000FF\"", vector[0],vector[1],vector[2]); plot(command);
+	drawv( 32, "#0000FF", vector );
 
 	vector = transform( rotCBA, zhat ); printv( vector );
-	sprintf(command,"set arrow from 0,0,0 to %f,%f,%f lc rgb \"#0000FF\"", vector[0],vector[1],vector[2]); plot(command);
+	drawv( 33, "#0000FF", vector );
 
 	plot("replot");
 
@@ -145,9 +163,9 @@ void plot( const char* command )
 void printv( double* v )
 {
 
-	printf("\n");
 	for ( int i = 0; i < 3; i++ )
-		printf("[ % 1f ]\n", v[i]);
+		printf("[ % 1f ]", v[i]);
+	printf(" %f",length(v));
 	printf("\n");
 
 }
@@ -155,7 +173,6 @@ void printv( double* v )
 void printm( double* m )
 {
 
-	printf("\n");
 	for ( int j = 0; j < 3; j++ )
 	{
 		printf("[ ");
@@ -171,6 +188,20 @@ double dot( double* v1, double* v2 )
 {
 
 	return v1[0]*v2[0] + v1[1]*v2[1] + v1[2]*v2[2];
+
+}
+
+double* unitv( double* v )
+{
+
+	static double vector[3] = {0.0};
+	double magnitude = length( v );
+
+	vector[0] /= magnitude;
+	vector[1] /= magnitude;
+	vector[2] /= magnitude;
+
+	return vector;
 
 }
 
@@ -208,5 +239,14 @@ double* transpose( double* m )
             matrix[j] += m[3*i+j];
 
 	return matrix;
+
+}
+
+void drawv( int id, const char* color, double* v )
+{
+
+	char command[128];
+	sprintf(command,"set arrow %d from 0,0,0 to %f,%f,%f lc rgb \"%s\"", id, v[0],v[1],v[2], color);
+	plot(command);
 
 }
