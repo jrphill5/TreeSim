@@ -23,7 +23,7 @@ FILE* gnuplot;
 int main()
 {
 
-	gnuplot = popen("gnuplot - > /dev/null 2>&1","w");
+	gnuplot = popen("gnuplot -geometry 600x600 - > /dev/null 2>&1","w");
 	//plot("set term postscript eps color");
 	plot("set xlabel \"x\" offset first 0,3,0");
 	plot("set xrange[-3:3]");
@@ -76,13 +76,14 @@ int main()
 	                     sin(a)*cos(b)*cos(c) + cos(a)*sin(c),  cos(a)*cos(c) - sin(a)*cos(b)*sin(c),  sin(a)*sin(b),
 	                    -sin(b)*cos(c),                         sin(b)*sin(c)                       ,  cos(b)         };
 
-	int speed = 50;
+	int kmax = 50;
+	int jmax = 1;
+	int imax = 50;
 	while ( true )
-	for ( int k = 0; k < speed; k++ )
+	for ( int k = 0; k < kmax; k++ )
 	{
 
-		a = 2.0*pi/speed * k;
-		a = pi/6.0;
+		a = 2.0*pi/kmax * k;
 
 		double rotA[]   = {  cos(a), -sin(a),  0.0,
 		                     sin(a),  cos(a),  0.0,
@@ -97,12 +98,10 @@ int main()
 		vector = transform( rotA, zhat );
 		drawv( 13, "#FF0000", vector );
 
-		plot("replot");
-
-		for ( int j = 0; j < speed; j++ )
+		for ( int j = 0; j < jmax; j++ )
 		{
 
-			b = 2.0*pi/speed * j;
+			b = pi / 6.0;
 
 			double rotAB[]  = {  cos(a)*cos(b), -sin(a),  cos(a)*sin(b),
 			                     sin(a)*cos(b),  cos(a),  sin(a)*sin(b),
@@ -118,12 +117,10 @@ int main()
 			vector = transform( rotAB, zhat );
 			drawv( 23, "#00FF00", vector );
 
-			plot("replot");
-
-			for ( int i = 0; i < speed; i++ )
+			for ( int i = 0; i < imax; i++ )
 			{
 
-				c = 2.0*pi/speed * i;
+				c = 2.0*pi/imax * i;
 
 				double rotABC[] = {  cos(a)*cos(b)*cos(c) - sin(a)*sin(c), -sin(a)*cos(c) - cos(a)*cos(b)*sin(c),  cos(a)*sin(b),
 				                     sin(a)*cos(b)*cos(c) + cos(a)*sin(c),  cos(a)*cos(c) - sin(a)*cos(b)*sin(c),  sin(a)*sin(b),
