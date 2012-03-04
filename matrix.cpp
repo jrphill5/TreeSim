@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <math.h>
 #include <signal.h>
+#include <unistd.h>
 
 using namespace std;
 
@@ -86,9 +87,9 @@ int main()
 
 	}
 
-	int kmax = 101-speed;
+	int kmax = 100;
 	int jmax = 1;
-	int imax = 101-speed;
+	int imax = 100;
 	while ( true )
 	for ( int k = 0; k < kmax; k++ )
 	{
@@ -147,18 +148,15 @@ int main()
 
 				plot("replot");
 
+				usleep( 750*(100 - speed) );
+
+				signal(2, &sighandler);
+
 			}
 
 		}
 
 	}
-
-	while (true)
-	{
-
-		signal(2, &sighandler);
-
-	};
 
 	return 0;
 
