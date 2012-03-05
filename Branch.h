@@ -15,8 +15,8 @@ class Branch
 		double rbranch, rleaves;
 		double rwidth, mleaves;
 		int leaves;
-		double x0, y0, z0;
-		double x,  y,  z;
+		double origin[3];
+		double vector[3];
 		double r,  th, ph;
 		bool hidden;
 		Plot* plot;
