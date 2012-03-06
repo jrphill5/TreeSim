@@ -10,3 +10,5 @@ using straler number make it be able to have a certain branching frequency
 offset angle of rotation by some random probability for each pair
 
 speed up rendering by changing vector output method
+
+have branching angle decrease with increasing tier
